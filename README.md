@@ -15,11 +15,18 @@ A modern, clean, and academic-looking web dashboard UI for a Smart Shelf Managem
 
 ## Technology Stack
 
+### Frontend
 - **React.js** - Frontend framework
 - **React Router** - Client-side routing
 - **Axios** - HTTP client for API calls
 - **Recharts** - Chart library for data visualization
 - **CSS3** - Styling with minimalistic, flat design
+
+### Backend
+- **FastAPI** - Python web framework for API
+- **YOLO (Ultralytics)** - Object detection model
+- **OpenCV** - Image processing
+- **NumPy** - Numerical computations
 
 ## Design Philosophy
 
@@ -31,6 +38,8 @@ A modern, clean, and academic-looking web dashboard UI for a Smart Shelf Managem
 - Suitable for academic presentation and industry demo
 
 ## Installation
+
+### Frontend Setup
 
 1. Install dependencies:
 ```bash
@@ -44,6 +53,41 @@ npm start
 
 The app will open at [http://localhost:3000](http://localhost:3000)
 
+### Backend Setup
+
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
+
+2. Create and activate a virtual environment (recommended):
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Ensure the YOLO model file (`best.pt`) is in `backend/models/` directory
+
+5. Start the backend server:
+```bash
+python app.py
+```
+
+Or use the startup script:
+```bash
+./start.sh
+```
+
+The backend API will be available at [http://localhost:8000](http://localhost:8000)
+API documentation (Swagger UI) available at [http://localhost:8000/docs](http://localhost:8000/docs)
+
+**Note**: Make sure to start the backend server before the frontend for full functionality.
+
 ## Pages
 
 - **/** - Home dashboard with all main components
@@ -52,12 +96,16 @@ The app will open at [http://localhost:3000](http://localhost:3000)
 
 ## API Integration
 
-The frontend expects the following backend API endpoints:
+The backend provides the following API endpoints:
 
-- `GET /api/detect` - Returns detected items with product information
+- `GET /api/health` - Health check endpoint
+- `GET /api/detect` - Returns latest detected items with product information
+- `POST /api/detect/upload` - Upload an image and get detections (multipart/form-data)
 - `GET /api/forecast` - Returns forecast data and predictions
-- `GET /api/alerts` - Returns alerts and notifications (optional, falls back to detect endpoint)
+- `GET /api/alerts` - Returns alerts and notifications
 - `GET /api/analytics?range={24h|7d|30d}` - Returns analytics data
+
+The frontend automatically proxies API requests to `http://localhost:8000` via `setupProxy.js`.
 
 ### API Response Format
 
@@ -111,22 +159,32 @@ The frontend expects the following backend API endpoints:
 ## Project Structure
 
 ```
-src/
-  ├── components/
-  │   ├── TopNavigation.js
-  │   ├── LiveShelfMonitoring.js
-  │   ├── DetectedItemsSummary.js
-  │   ├── StockLevelVisualization.js
-  │   ├── ForecastPrediction.js
-  │   └── AlertsPanel.js
-  ├── pages/
-  │   ├── Home.js
-  │   ├── Analytics.js
-  │   └── Alerts.js
-  ├── App.js
-  ├── App.css
-  ├── index.js
-  └── index.css
+Smart-Shelf-Management/
+  ├── backend/
+  │   ├── app.py                 # FastAPI application
+  │   ├── requirements.txt       # Python dependencies
+  │   ├── models/
+  │   │   └── best.pt           # YOLO trained model
+  │   ├── uploads/               # Uploaded images storage
+  │   └── README.md             # Backend documentation
+  ├── src/
+  │   ├── components/
+  │   │   ├── TopNavigation.js
+  │   │   ├── LiveShelfMonitoring.js
+  │   │   ├── DetectedItemsSummary.js
+  │   │   ├── StockLevelVisualization.js
+  │   │   ├── ForecastPrediction.js
+  │   │   └── AlertsPanel.js
+  │   ├── pages/
+  │   │   ├── Home.js
+  │   │   ├── Analytics.js
+  │   │   └── Alerts.js
+  │   ├── setupProxy.js         # API proxy configuration
+  │   ├── App.js
+  │   ├── App.css
+  │   ├── index.js
+  │   └── index.css
+  └── README.md
 ```
 
 ## Error Handling
